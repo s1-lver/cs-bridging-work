@@ -28,12 +28,13 @@ data = { // dictionary of data about the session, i.e. number of rolls, plays, t
 };
 
 
-document.getElementById("rollButton").onclick = function(){
+document.getElementById("rollButton").onclick = function() { // runs roll code when event onclick is satisfied (i.e the roll button is clicked)
     let rollsToPerform = document.getElementById("rollUntilNum").value;
     for (let i = 0; i < rollsToPerform; i++) {
         rollDice();
         data.rollNum++;
         data.cumulativeTotal += dice;
+        data.distribution[dice]++;
         if (data.cumulativeTotal >= 100) {
             data.playNum++;
             if (data.cumulativeTotal == 100 && !data.cumulTotalGoal) {
@@ -47,7 +48,7 @@ document.getElementById("rollButton").onclick = function(){
 }
 
 // functions
-function rollDice() {
+function rollDice() { // rolls dice (i.e. randomly generates numbers 1 through 6 and assigns value to dice)
     dice = getRndInteger(1, 6);
 }
 
