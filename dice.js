@@ -1,8 +1,9 @@
 /* 
 roll a 6-sided dice,
     - count number of rolls until you get:
-        * a 6
-        * a cumulative total > 100
+        * a 6 DONE
+        * a cumulative total > 100 DONE*
+            * everytime the cumulative total is at or above 100 it counts as a 'play' and resets 
         
     - count number of times you can get a certain number in a row DONE
         * output when new highest row length is acheived DONE
@@ -29,8 +30,7 @@ data = { // dictionary of data about the session, i.e. number of rolls, plays, t
     rowCount : 0,
     cumulativeTotal : 0,
     events : {
-        cumulTotalGoal : false,
-        sixRolledGoal : false
+        cumulTotalGoal : false
     },
     distribution : {
         1 : 0,
@@ -64,31 +64,30 @@ document.getElementById("rollButton").onclick = function() { // runs roll code w
             data.cumulativeTotal = 0;
         }
 
-        if (dice == 6 && !data.events.sixRolledGoal) {
+        if (dice == 6 && data.distribution[6] == 0) { // checks if the dice has rolled a 6, and if it hasn't happened before
             notifyEvent(`Took ${data.rollNum} ${pluralize(data.rollNum, "roll")} to get a 6`);
-            data.events.sixRolledGoal = true;
         }
 
-        if (data.lastNum == data.trackedNumber) {
-            data.rowCount++;
+        if (data.lastNum == data.trackedNumber) { // checks if the number rolled is the same one as before
+            data.rowCount++; // increases the row count
         } else {
-            data.rowCount = 0;
+            data.rowCount = 0; // otherwise sets the row count back to zero
         }
 
-        if (data.rowCount > data.longestRow[data.trackedNumber]) {
+        if (data.rowCount > data.longestRow[data.trackedNumber]) { // this checks if the current rowcount is greater than the highest row count
             data.longestRow[data.trackedNumber] = data.rowCount;
             notifyEvent(`Longest row achieved while tracking number ${data.trackedNumber} with a length of ${data.longestRow[data.trackedNumber]} ${pluralize(data.longestRow[data.trackedNumber], "row")}`, data.trackedNumber);
         }
-        data.lastNum = dice;
+        data.lastNum = dice; // sets the last number rolled to the current number of the dice
     }
-    updatePage(); // updates the page
+    updatePage(); // updates the page after the loop is complete
 }
 
 // functions
-const isPlural = num => Math.abs(num) !== 1; 
-const simplePlural = word => `${word}s`;
-const pluralize = (num, word, plural = simplePlural) =>
-    isPlural(num) ? plural(word) : word;
+const isPlural = num => Math.abs(num) !== 1; // checks if the absolute value of num is greater than 1, returns boolean
+const simplePlural = word => `${word}s`; // converts a word to its simple plural form (adds and s to the end of it)
+const pluralize = (num, word, plural = simplePlural) => // pluralizes a word based on a number. The plural form is able to be changed (i.e. word => `radii` for the word radius/radii)
+    isPlural(num) ? plural(word) : word; // one line conditional
 
 function rollDice() { // rolls dice (i.e. randomly generates numbers 1 through 6 and assigns value to dice)
     dice = getRndInteger(1, 6);
@@ -111,21 +110,21 @@ function updatePage() { // updates tables in html with values from data
 }
 
 function notifyEvent(event, id = null) { // creates html event notification as a new paragraph
-    if (document.getElementById(id) !== null) {
-        updateEvent(event, id)
+    if (document.getElementById(id) !== null) { // checks if theres already an element with the existing ID
+        updateEvent(event, id) // updates the element rather than creating a new one
     } else {
         const NEW_PARAGRAPH = document.createElement('p');
         NEW_PARAGRAPH.textContent = event;
-        if (id !== null) {
-            NEW_PARAGRAPH.id = id;
+        if (id !== null) { // if the id parameter has been entered
+            NEW_PARAGRAPH.id = id; // give the new element the specified id
         }
-        document.body.appendChild(NEW_PARAGRAPH);
+        document.body.appendChild(NEW_PARAGRAPH); // append new element to body
     }
 }
 
-function updateEvent(msg, id) {
+function updateEvent(msg, id) { // takes in the message and id of element
     let element = document.getElementById(id);
-    element.innerHTML = msg;
+    element.innerHTML = msg; // updates event message
 }
 
 
