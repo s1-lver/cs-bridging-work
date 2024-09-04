@@ -6,10 +6,12 @@
 </head>
 
 <body>
-    <label for="rollUntilNum">Number of Rolls to perform :</label>
-    <input type="number" id="rollUntilNum" name="rollUntilNum"><br>
-    <button type="button" id="rollButton">Roll!</button>
-    <hr>
+    <form oninput="result.value = numToTrack.value">
+        <label for="rollUntilNum">Number of Rolls to perform :</label> <input type="number" id="rollUntilNum" name="rollUntilNum" value=1><br>
+        <button type="button" id="rollButton">Roll!</button><br>
+        <label for="numToTrack">Number to Track :</label> <input type="range" min="1" max="6" step="1" value="1" id="numToTrack" name="numToTrack"> <output name="result" for="numToTrack">1</output></output><br>
+        <hr>
+    </form>
     <table>
         <tr>
             <td>Number of Rolls :</td>
